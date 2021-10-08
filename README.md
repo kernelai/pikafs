@@ -6,7 +6,11 @@ polarfs 开源实现
 
 ## 痛点
 
-为了解决这个痛点，pika在做sharing nothing的集群方案，在开发这个系统的过程中遇到了架构导致的问题。例如：
+为了解决这个痛点，pika在做sharing nothing的集群方案，在开发这个系统的过程中遇到了架构导致的问题。
+
+![share nothing](https://github.com/kernelai/pikafs/blob/main/doc/pic/share_nothing_argchitecture.png)
+
+例如：
 
 * 由于按照hash的方式来对数据切分后，无法对数据进行全局scan的问题。
 * hash的分布不能有效解决key热点的问题。我们在维护codis-pika 集群的时候明显能发现这个问题。
@@ -19,7 +23,11 @@ polarfs 开源实现
 
 ## 契机
 当我们看到AWS aurora 和阿里云的PorlarDB时，似乎看到了一丝曙光。尽管它是应用于SQL数据库，我们大胆的设想，这种架构能否应用于KV数据库呢？
+
+![polardb](https://github.com/kernelai/pikafs/blob/main/doc/pic/polardb.png)
 存储和计算分离的架构带来一系列的优势：
+
+![share storage](https://github.com/kernelai/pikafs/blob/main/doc/pic/share_storage_argchitecture.png)
 
 * 在基础设施逐步完善的大环境下，天生适合云原生。计算资源就成为无状态的服务，借助于K8s环境按照业务需求快速的扩缩容。把DBA同学要深入理解数据库的使命，转换为仅仅面向资源。据悉阿里云维护数千数polardb据库，仅需1~2人的人力。
 * 一写多读的架构使得面对写节点故障时主从切换变得异常简单，不需要考虑内部各个slot的主从状态。
